@@ -1,0 +1,23 @@
+.bg {
+    background: rgb(64, 131, 231);
+    height: 100vh;
+}
+/* body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+} */
+.container {
+    width: 1300px;
+    height: 600px;
+    background-color: white;
+    margin: 20px; /* Applies to all sides */
+    border-radius: 50px;
+    box-shadow: 0 18px 18px 0 rgba(39, 39, 40, 0.9);
+    overflow: auto;
+}
+
+.flex{
+    display: flex;
+   
+}

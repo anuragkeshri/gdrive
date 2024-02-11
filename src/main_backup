@@ -1,0 +1,198 @@
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import style from "./main.module.css";
+import computers from "./computer.png";
+
+const Main = () => {
+  const [folderData, setFolderData] = useState([]);
+  const [contextMenu, setContextMenu] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+  });
+  const [selectedFolderForContextMenu, setSelectedFolderForContextMenu] =
+    useState(null);
+  const [renameName, setRenameName] = useState('');
+  const [isRenaming, setIsRenaming] = useState(false);
+
+  const containerRef = useRef(null);
+
+  const apiUrl = "https://ujjwalzero7.pythonanywhere.com/api/get_entities/";
+  const userid = sessionStorage.getItem("userid");
+
+  const handleContextMenu = (e, folder) => {
+    e.preventDefault();
+    setSelectedFolderForContextMenu(folder);
+    setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+  };
+
+  const handleDeleteClick = () => {
+    if (!selectedFolderForContextMenu || !selectedFolderForContextMenu.id) {
+      console.error('Invalid or missing folder data for delete');
+      return;
+    }
+
+    axios
+      .delete('https://ujjwalzero7.pythonanywhere.com/api/delete_entity/', {
+        data: { entity_id: selectedFolderForContextMenu.id },
+      })
+      .then((response) => {
+        console.log(response.data.message);
+        closeContextMenu();
+        fetchFolderData();
+      })
+      .catch((error) => {
+        console.error('Error deleting folder:', error);
+        closeContextMenu();
+      });
+  };
+
+  const handleRenameClick = () => {
+    setIsRenaming(true);
+  };
+
+  const handleRenameSave = () => {
+    if (!selectedFolderForContextMenu || !renameName) {
+      console.error('Invalid or missing data for rename');
+      return;
+    }
+
+    axios
+      .put('https://ujjwalzero7.pythonanywhere.com/api/rename_entity/', {
+        folder_id: selectedFolderForContextMenu.id,
+        new_name: renameName,
+      })
+      .then((response) => {
+        console.log(response.data.message);
+        closeContextMenu();
+        fetchFolderData(); 
+        setIsRenaming(false);
+        setRenameName('');
+      })
+      .catch((error) => {
+        console.error('Error renaming folder:', error);
+        closeContextMenu();
+        setIsRenaming(false);
+      });
+  };
+
+  const closeContextMenu = () => {
+    setContextMenu({ visible: false, x: 0, y: 0 });
+    setSelectedFolderForContextMenu(null);
+  };
+
+  const fetchFolderData = async () => {
+    const payload = {
+      user_id: userid,
+      folder_path: "/",
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      setFolderData(data);
+    } catch (error) {
+      console.error("Error fetching folder data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFolderData();
+  }, [userid, apiUrl]);
+
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        closeContextMenu();
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
+
+  return (
+    <>
+      <div className={style.col} ref={containerRef}>
+        <div onContextMenu={(e) => handleContextMenu(e, null)}>
+          <h3
+            style={{
+              marginTop: "50px",
+              marginLeft: "40px",
+              color: "rgb(78, 149, 230)",
+            }}
+          >
+            My Drive
+          </h3>
+        </div>
+        <hr style={{ border: "1px solid grey", margin: "5px 15px" }} />
+        <h5 style={{ marginLeft: "40px" }}>All Files</h5>
+
+        <div className={style.folder}>
+          {folderData.map((item) => (
+            <div
+              key={item.id}
+              className={style.f_one}
+              onContextMenu={(e) => handleContextMenu(e, item)}
+            >
+              {item.content_type === "Folder" ? (
+                <>
+                  📂
+                  {item.name}
+                </>
+              ) : (
+                <img
+                  src={`URL_TO_YOUR_IMAGE_SERVER/${item.name}`}
+                  alt={item.name}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Context Menu */}
+        {contextMenu.visible && (
+          <div
+            style={{
+              position: "fixed",
+              top: contextMenu.y,
+              left: contextMenu.x,
+              backgroundColor: "white",
+              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+              borderRadius: "4px",
+              zIndex: 1000,
+            }}
+          >
+            <div onClick={handleDeleteClick}>Delete</div>
+            <hr />
+            <div onClick={handleRenameClick}>Rename</div>
+          </div>
+        )}
+
+        {/* Rename Input */}
+        {isRenaming && (
+          <div>
+            <input
+              type="text"
+              value={renameName}
+              onChange={(e) => setRenameName(e.target.value)}
+            />
+            <button onClick={handleRenameSave}>Save</button>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default Main;
