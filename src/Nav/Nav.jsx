@@ -10,7 +10,7 @@ const Nav = () => {
     <>
       <nav className={style.nav}>
       <img src={drive} alt="drive"/>
-        <h3 style={{color:"blue", marginLeft:"20px"}}> Google drive</h3>
+        <h3 style={{color:"blue", marginLeft:"20px"}}> G-drive</h3>
        
         <input type = "search"  style={{marginLeft:"150px" , width:"400px", height:"30px",borderRadius:"20px", backgroundColor:"#448EE4"}} placeholder='      Search files'/>
         <icon>

@@ -1,8 +1,8 @@
 import sign from "./signin.module.css";
-import { Link } from "react-router-dom";
-import google from "../google.png";
-import facebook from "../facebook.png";
-import twitter from "../twitter.png";
+
+import google from "../image/google.png";
+import facebook from "../image/facebook.png";
+import twitter from "../image/twitter.png";
 import React, { useState } from "react";
 import Content from "../content/Content";
 import { useNavigate } from "react-router-dom";

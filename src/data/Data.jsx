@@ -1,9 +1,7 @@
 import React from "react";
 import style from "./data.module.css";
-import Nav from "./Nav";
-import Sidebar from "./sidebar/Sidebar";
-import Main from "./main/Main";
-import Tables from "./table/Tables";
+import Nav from "../Nav/Nav";
+import Main from "../main/Main";
 
 const Data = () => {
   return (
@@ -15,7 +13,6 @@ const Data = () => {
         <Nav />
 
         <div className={style.flex}>
-          {/* <Sidebar /> */}
            <Main /> 
         </div>
        
