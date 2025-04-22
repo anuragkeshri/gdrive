@@ -1,5 +1,5 @@
 import sign from "./signin.module.css";
-
+import { Link } from "react-router-dom";
 import google from "../image/google.png";
 import facebook from "../image/facebook.png";
 import twitter from "../image/twitter.png";
@@ -82,7 +82,18 @@ const SignIn = () => {
             >
               Welcome to G-Drive
             </p>
+            <button className={sign.signup}>
+              <Link
+                to="/"
+                style={{ color: "white", textDecoration: "none" }}
+              >
+                SignUp ➜
+              </Link>
+            </button>
+
           </div>
+
+
           <div className={sign.input}>
             <input
               type="text"
