@@ -156,7 +156,7 @@ function Main() {
   };
 
   return (
-    <div className={style.container}>
+    // <div className={style.container}>
       <div className={style.flexy}>
         <div className={style.sidebar}>
           <CreateFolderButton userId={userId} folderPath={selectedFolder} />
@@ -253,7 +253,7 @@ function Main() {
           </div>
         )}
       </div>
-    </div>
+    // </div>
   );
 }
 

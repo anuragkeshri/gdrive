@@ -7,17 +7,14 @@ const Data = () => {
   return (
     <>
     <div className={style.bg}>
+  <div className={style.container}>
+    <Nav />
+    <div className={style.flex}>
+      <Main />
+    </div>
+  </div>
+</div>
 
-   
-      <div className={style.container}>
-        <Nav />
-
-        <div className={style.flex}>
-           <Main /> 
-        </div>
-       
-      </div>
-      </div>
     </>
   );
 };
